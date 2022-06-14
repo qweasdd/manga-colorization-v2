@@ -6,7 +6,7 @@
 $ python inference.py -p "path to file or folder"
 ```
 
-| col 1      | col 2      |
+| Original      | Colorization      |
 |------------|-------------|
 | <img src="figures/bw1.jpg" width="512"> | <img src="figures/color1.png" width="512"> |
 | <img src="figures/bw2.jpg" width="512"> | <img src="figures/color2.png" width="512"> |
