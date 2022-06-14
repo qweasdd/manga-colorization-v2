@@ -1,0 +1,8 @@
+*.ipynb
+*.pth
+*.zip
+
+__pycache__/
+temp_colorization/
+
+static/temp_images/
