@@ -79,7 +79,7 @@ if __name__ == "__main__":
         
         split = os.path.splitext(args.path)
         
-        if split[1].lower() in ('.jpg', '.png', ',jpeg'):
+        if split[1].lower() in ('.jpg', '.png', '.jpeg'):
             new_image_path = split[0] + '_colorized' + '.png'
             
             colorize_single_image(args.path, new_image_path, colorizer, args)
