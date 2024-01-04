@@ -24,7 +24,7 @@ from .models import FFDNet
 from .utils import normalize, variable_to_cv2_image, remove_dataparallel_wrapper, is_rgb
     
 class FFDNetDenoiser:
-    def __init__(self, _device, _sigma = 25, _weights_dir = 'denoising/models/', _in_ch = 3):
+    def __init__(self, _device, _sigma = 25, _weights_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)),'models'), _in_ch = 3):
         self.sigma = _sigma / 255
         self.weights_dir = _weights_dir
         self.channels = _in_ch
