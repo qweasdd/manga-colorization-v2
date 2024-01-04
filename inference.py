@@ -44,8 +44,9 @@ def colorize_images(target_path, colorizator, args):
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("-p", "--path", required=True)
-    parser.add_argument("-gen", "--generator", default = 'networks/generator.zip')
-    parser.add_argument("-ext", "--extractor", default = 'networks/extractor.pth')
+    parser.add_argument("-o", "--out")
+    parser.add_argument("-gen", "--generator", default = os.path.join(os.path.dirname(os.path.abspath(__file__)),'networks/generator.zip'))
+    parser.add_argument("-ext", "--extractor", default = os.path.join(os.path.dirname(os.path.abspath(__file__)),'networks/extractor.pth'))
     parser.add_argument('-g', '--gpu', dest = 'gpu', action = 'store_true')
     parser.add_argument('-nd', '--no_denoise', dest = 'denoiser', action = 'store_false')
     parser.add_argument("-ds", "--denoiser_sigma", type = int, default = 25)
@@ -78,13 +79,15 @@ if __name__ == "__main__":
     elif os.path.isfile(args.path):
         
         split = os.path.splitext(args.path)
+        if not split[1].lower() in ('.jpg', '.png', '.jpeg'):
+            raise Exception('Wrong format')
         
-        if split[1].lower() in ('.jpg', '.png', '.jpeg'):
+        if not args.out:
             new_image_path = split[0] + '_colorized' + '.png'
-            
-            colorize_single_image(args.path, new_image_path, colorizer, args)
         else:
-            print('Wrong format')
+            new_image_path = args.out
+            
+        colorize_single_image(args.path, new_image_path, colorizer, args)
     else:
         print('Wrong path')
     
