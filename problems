@@ -1,0 +1,8 @@
+1. Torch not found
+
+    conda install pytorch torchvision torchaudio pytorch-cuda=11.7 -c pytorch -c nvidia
+
+2. ImportError: cannot import name 'inv' from 'numpy.linalg' (unknown location)
+
+    pip uninstall -y numpy
+    pip install numpy
