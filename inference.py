@@ -53,6 +53,7 @@ def colorize_images(target_path, colorizator, args):
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("-p", "--path", required=True)
+    parser.add_argument("-o", "--output", default=None, help="Output location for colored images")
     parser.add_argument("-gen", "--generator", default='networks/generator.zip')
     parser.add_argument("-ext", "--extractor", default='networks/extractor.pth')
     parser.add_argument('-g', '--gpu', dest='gpu', action='store_true')
@@ -76,15 +77,17 @@ if __name__ == "__main__":
 
     colorizer = MangaColorizator(device, args.generator, args.extractor)
 
-    current_date = datetime.now().strftime('%Y-%m-%d')
-    colorization_path = os.path.join('.', 'colored', current_date)
+    if args.output:
+        colorization_path = args.output
+    else:
+        current_date = datetime.now().strftime('%Y-%m-%d')
+        colorization_path = os.path.join('.', 'colored', current_date)
 
     if not os.path.exists(colorization_path):
         os.makedirs(colorization_path)
 
     if os.path.isdir(args.path):
         colorize_images(colorization_path, colorizer, args)
-
     elif os.path.isfile(args.path):
         split = os.path.splitext(args.path)
 
