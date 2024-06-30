@@ -1,7 +1,5 @@
 import os
 import gradio as gr
-import tempfile
-import shutil
 from datetime import datetime
 from PIL import Image
 
@@ -45,9 +43,10 @@ def print_cli(image, output=None, gpu=False, no_denoise=False, denoiser_sigma=25
     else:
         return "Error: No colorized image found."
 
-def load_image(image_path):
-    if os.path.exists(image_path):
-        return Image.open(image_path)
+def load_image(image_path, output, gpu, no_denoise, denoiser_sigma, size):
+    colorized_image_path = print_cli(image_path, output, gpu, no_denoise, denoiser_sigma, size)
+    if os.path.exists(colorized_image_path):
+        return Image.open(colorized_image_path)
     else:
         return None
 
@@ -56,18 +55,17 @@ def run_interface():
 
     with demo:
         with gr.Tab("Colorize Single Image"):
-            gr.Markdown("<style>.input-image img {max-width: 150px;}</style>")
             iface1 = gr.Interface(
-                fn=lambda *args: load_image(print_cli(*args)),
+                fn=lambda *args: load_image(*args),
                 inputs=[
-                    gr.Image(type='filepath', label="Image", elem_classes="input-image"),
+                    gr.Image(type='filepath', label="Image", elem_classes="input-image", height=500, width=700),
                     gr.Textbox(label="Output Location", placeholder="Optional"),
                     gr.Checkbox(label="Use GPU"),
                     gr.Checkbox(label="No Denoise"),
                     gr.Slider(0, 100, label="Denoiser Sigma", value=25, step=1),
                     gr.Slider(0, 4000, label="Size", value=576, step=32)
                 ],
-                outputs=gr.Image(type='pil', label="Colorized Image")
+                outputs=gr.Image(type='pil', label="Colorized Image", height=800, width=700)
             )
 
     demo.launch()
