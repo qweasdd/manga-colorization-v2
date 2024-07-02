@@ -4,6 +4,7 @@ from datetime import datetime
 import numpy as np
 import matplotlib.pyplot as plt
 from colorizator import MangaColorizator
+import torch
 
 
 def process_image(image, colorizator, args):
@@ -13,8 +14,16 @@ def process_image(image, colorizator, args):
 
 def colorize_single_image(image_path, save_path, colorizator, args):
     image = plt.imread(image_path)
-    colorization = process_image(image, colorizator, args)
-    plt.imsave(save_path, colorization)
+    while True:
+        try:
+            colorization = process_image(image, colorizator, args)
+            plt.imsave(save_path, colorization)
+            break
+        except torch.cuda.OutOfMemoryError:
+            print("GPU out of memory for size {}. Trying with smaller size.".format(args.size))
+            args.size -= 32
+            if args.size <= 0:
+                raise ValueError("Image size is too small.")
     return True
 
 
