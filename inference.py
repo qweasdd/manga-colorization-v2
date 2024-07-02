@@ -91,7 +91,7 @@ if __name__ == "__main__":
     elif os.path.isfile(args.path):
         split = os.path.splitext(args.path)
 
-        if split[1].lower() in ('.jpg', '.png', '.jpeg'):
+        if split[1].lower() in ('.jpg', '.png', '.jpeg', '.webp'):
             new_image_name = os.path.basename(split[0]) + '_colorized.png'
             new_image_path = os.path.join(colorization_path, new_image_name)
             new_image_path = get_unique_save_path(new_image_path)
