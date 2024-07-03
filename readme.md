@@ -1,9 +1,8 @@
 # Automatic colorization
 
 I have created a demo video to explain how the webui works.
-```
-$ python inference.py -p "path to file or folder"
-```
+
+---
 
 | Original      | Colorization      |
 |------------|-------------|
