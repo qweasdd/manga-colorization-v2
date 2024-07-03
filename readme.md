@@ -1,9 +1,6 @@
 # Automatic colorization
 
-1. Download the generator and denoiser from extras
-   ![image](https://github.com/Kaiser42/Manga-Colorization-GUI/assets/172440621/a5bf5a48-c398-4669-bf2d-d6a21688be2a)
-
-3. To colorize image or folder of images, use the following command:
+I have created a demo video to explain how the webui works.
 ```
 $ python inference.py -p "path to file or folder"
 ```
