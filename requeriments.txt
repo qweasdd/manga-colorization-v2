@@ -1,5 +1,5 @@
 matplotlib==3.9.0
 numpy==2.0.0
-opencv-python==4.10.0.82
-rarfile==4.2
+opencv-python==4.10.0.84
+rarfile==4.0
 gradio==4.36.1
