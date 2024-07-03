@@ -6,3 +6,10 @@ __pycache__/
 temp_colorization/
 
 static/temp_images/
+.idea/inspectionProfiles/profiles_settings.xml
+*.xml
+.idea/manga-colorization-GUI.iml
+colored/2024-06-24/draw-a-manga-panel-for-you_colorized.png
+/colored
+/output_images
+/temp_extracted
