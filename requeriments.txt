@@ -2,3 +2,4 @@ matplotlib
 numpy
 matplotlib
 opencv-python
+rarfile
