@@ -6,6 +6,7 @@ from datetime import datetime
 from PIL import Image
 from webui_utils.download import download_weights
 from pathlib import Path
+import argparse
 
 
 def get_unique_save_path(save_path):
@@ -129,7 +130,7 @@ def colorize_archive(archive_path, output, gpu, no_denoise, denoiser_sigma, size
     return colorized_archive_path
 
 
-def run_interface():
+def run_interface(share=False):
     with gr.Blocks() as demo:
         with gr.Tab("Colorize Single Image"):
             with gr.Row():
@@ -204,8 +205,12 @@ def run_interface():
                         outputs=gr.Textbox(label="Download Status")
                     )
 
-    demo.launch()
+    demo.launch(share=share)
 
 
 if __name__ == "__main__":
-    run_interface()
+    parser = argparse.ArgumentParser(description="Run Gradio Interface")
+    parser.add_argument('-url', action='store_true', help='Generate a public URL for the Gradio interface')
+    args = parser.parse_args()
+
+    run_interface(share=args.url)
