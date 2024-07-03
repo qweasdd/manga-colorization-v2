@@ -1,7 +1,9 @@
 # Automatic colorization
 
-1. Download [generator](https://drive.google.com/file/d/1qmxUEKADkEM4iYLp1fpPLLKnfZ6tcF-t/view?usp=sharing) and [denoiser](https://drive.google.com/file/d/161oyQcYpdkVdw8gKz_MA8RD-Wtg9XDp3/view?usp=sharing) weights. Put generator and extractor weights in `networks` and denoiser weights in `denoising/models`.
-2. To colorize image or folder of images, use the following command:
+1. Download the generator and denoiser from extras
+   ![image](https://github.com/Kaiser42/Manga-Colorization-GUI/assets/172440621/a5bf5a48-c398-4669-bf2d-d6a21688be2a)
+
+3. To colorize image or folder of images, use the following command:
 ```
 $ python inference.py -p "path to file or folder"
 ```
