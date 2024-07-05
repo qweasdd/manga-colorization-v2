@@ -13,11 +13,14 @@ def download_file(url, dest_folder):
 def download_weights():
     generator_url = "https://huggingface.co/KaiserQ/Models-GEN/resolve/main/Manga-Colorization-GUI/generator.zip"
     extractor_url = "https://huggingface.co/KaiserQ/Models-GEN/resolve/main/Manga-Colorization-GUI/net_rgb.pth"
+    esrgan_url = "https://huggingface.co/KaiserQ/Models-GEN/resolve/main/Manga-Colorization-GUI/RealESRGAN_x4plus_anime_6B.pth"
 
     generator_dest = "networks"
     extractor_dest = "denoising/models"
+    esrgan_dest = "weights"
 
     generator_path = download_file(generator_url, generator_dest)
     extractor_path = download_file(extractor_url, extractor_dest)
+    esrgan_path = download_file(esrgan_url, esrgan_dest)
 
-    return f"Downloaded {generator_path} and {extractor_path}"
+    return f"Downloaded {generator_path}, {extractor_path}, and {esrgan_path}"

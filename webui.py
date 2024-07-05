@@ -7,7 +7,9 @@ from PIL import Image
 from webui_utils.download import download_weights
 from pathlib import Path
 import argparse
-
+import cv2
+import torch
+from realesrgan import RealESRGANer
 
 def get_unique_save_path(save_path):
     base, ext = os.path.splitext(save_path)
@@ -16,7 +18,6 @@ def get_unique_save_path(save_path):
         save_path = f"{base}_{counter}{ext}"
         counter += 1
     return save_path
-
 
 def extract_images_from_archive(archive_path, temp_dir):
     ext = os.path.splitext(archive_path)[1].lower()
@@ -33,8 +34,7 @@ def extract_images_from_archive(archive_path, temp_dir):
 
     return extracted_files
 
-
-def print_cli(image, output=None, gpu=False, no_denoise=False, denoiser_sigma=25, size=576):
+def print_cli(image, output=None, gpu=False, no_denoise=False, denoiser_sigma=25, size=576, upscale=False):
     if output is None or output.strip() == "":
         current_date = datetime.now().strftime('%Y-%m-%d')
         output = os.path.join('.', 'colored', current_date)
@@ -59,29 +59,49 @@ def print_cli(image, output=None, gpu=False, no_denoise=False, denoiser_sigma=25
     os.system(command)
 
     if os.path.exists(colorized_image_path):
+        if upscale:
+            upscale_image(colorized_image_path, colorized_image_path, gpu)
         return colorized_image_path
     else:
         return "Error: No colorized image found."
 
+def upscale_image(input_image_path, output_image_path, gpu):
+    device = torch.device('cuda' if gpu and torch.cuda.is_available() else 'cpu')
+    model = RealESRGANer(
+        scale=4,
+        model_path='weights/RealESRGAN_x4plus_anime_6B.pth',  # Use the anime model
+        dni_weight=None,
+        tile=0,
+        tile_pad=10,
+        pre_pad=0,
+        half=True,
+        device=device
+    )
 
-def load_image(image_path, output, gpu, no_denoise, denoiser_sigma, size):
-    colorized_image_path = print_cli(image_path, output, gpu, no_denoise, denoiser_sigma, size)
+    image = cv2.imread(input_image_path, cv2.IMREAD_COLOR)
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+
+    sr_image, _ = model.enhance(image)
+
+    sr_image = cv2.cvtColor(sr_image, cv2.COLOR_RGB2BGR)
+    cv2.imwrite(output_image_path, sr_image)
+
+def load_image(image_path, output, gpu, no_denoise, denoiser_sigma, size, upscale):
+    colorized_image_path = print_cli(image_path, output, gpu, no_denoise, denoiser_sigma, size, upscale)
     if os.path.exists(colorized_image_path):
         return Image.open(colorized_image_path)
     else:
         return None
 
-
-def colorize_multiple_images(image_paths, output, gpu, no_denoise, denoiser_sigma, size):
+def colorize_multiple_images(image_paths, output, gpu, no_denoise, denoiser_sigma, size, upscale):
     colorized_images = []
     for image_path in image_paths:
-        colorized_image_path = print_cli(image_path, output, gpu, no_denoise, denoiser_sigma, size)
+        colorized_image_path = print_cli(image_path, output, gpu, no_denoise, denoiser_sigma, size, upscale)
         if os.path.exists(colorized_image_path):
             colorized_images.append(Image.open(colorized_image_path))
     return colorized_images
 
-
-def colorize_folder(input_folder, output_folder, gpu, no_denoise, denoiser_sigma, size):
+def colorize_folder(input_folder, output_folder, gpu, no_denoise, denoiser_sigma, size, upscale):
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
 
@@ -101,14 +121,13 @@ def colorize_folder(input_folder, output_folder, gpu, no_denoise, denoiser_sigma
 
     colorized_images = []
     for image_path in image_files:
-        colorized_image_path = print_cli(image_path, output_folder, gpu, no_denoise, denoiser_sigma, size)
+        colorized_image_path = print_cli(image_path, output_folder, gpu, no_denoise, denoiser_sigma, size, upscale)
         if os.path.exists(colorized_image_path):
             colorized_images.append(Image.open(colorized_image_path))
 
     return colorized_images
 
-
-def colorize_archive(archive_path, output, gpu, no_denoise, denoiser_sigma, size):
+def colorize_archive(archive_path, output, gpu, no_denoise, denoiser_sigma, size, upscale):
     temp_dir = Path('./temp_extracted')
     if not temp_dir.exists():
         temp_dir.mkdir(parents=True, exist_ok=True)
@@ -117,7 +136,7 @@ def colorize_archive(archive_path, output, gpu, no_denoise, denoiser_sigma, size
 
     colorized_images = []
     for image_path in extracted_files:
-        colorized_image_path = print_cli(image_path, output, gpu, no_denoise, denoiser_sigma, size)
+        colorized_image_path = print_cli(image_path, output, gpu, no_denoise, denoiser_sigma, size, upscale)
         if os.path.exists(colorized_image_path):
             colorized_images.append(Image.open(colorized_image_path))
 
@@ -128,7 +147,6 @@ def colorize_archive(archive_path, output, gpu, no_denoise, denoiser_sigma, size
             colorized_archive.write(image_path.filename, os.path.basename(image_path.filename))
 
     return colorized_archive_path
-
 
 def run_interface(share=False):
     with gr.Blocks() as demo:
@@ -143,7 +161,8 @@ def run_interface(share=False):
                             gr.Checkbox(label="Use GPU"),
                             gr.Checkbox(label="No Denoise"),
                             gr.Slider(0, 100, label="Denoiser Sigma", value=25, step=1),
-                            gr.Slider(0, 4000, label="Size", value=576, step=32)
+                            gr.Slider(0, 4000, label="Size", value=576, step=32),
+                            gr.Checkbox(label="Upscale Image")  # Added checkbox for upscaling
                         ],
                         outputs=gr.Image(type='pil', label="Colorized Image", height=800, width=700)
                     )
@@ -159,7 +178,8 @@ def run_interface(share=False):
                             gr.Checkbox(label="Use GPU"),
                             gr.Checkbox(label="No Denoise"),
                             gr.Slider(0, 100, label="Denoiser Sigma", value=25, step=1),
-                            gr.Slider(0, 4000, label="Size", value=576, step=32)
+                            gr.Slider(0, 4000, label="Size", value=576, step=32),
+                            gr.Checkbox(label="Upscale Image")  # Added checkbox for upscaling
                         ],
                         outputs=gr.Gallery(label="Colorized Images", columns=4, height="auto")
                     )
@@ -175,7 +195,8 @@ def run_interface(share=False):
                             gr.Checkbox(label="Use GPU"),
                             gr.Checkbox(label="No Denoise"),
                             gr.Slider(0, 100, label="Denoiser Sigma", value=25, step=1),
-                            gr.Slider(0, 4000, label="Size", value=576, step=32)
+                            gr.Slider(0, 4000, label="Size", value=576, step=32),
+                            gr.Checkbox(label="Upscale Image")  # Added checkbox for upscaling
                         ],
                         outputs=gr.Gallery(label="Colorized Images", columns=4, height="auto")
                     )
@@ -191,7 +212,8 @@ def run_interface(share=False):
                             gr.Checkbox(label="Use GPU"),
                             gr.Checkbox(label="No Denoise"),
                             gr.Slider(0, 100, label="Denoiser Sigma", value=25, step=1),
-                            gr.Slider(0, 4000, label="Size", value=576, step=32)
+                            gr.Slider(0, 4000, label="Size", value=576, step=32),
+                            gr.Checkbox(label="Upscale Image")  # Added checkbox for upscaling
                         ],
                         outputs=gr.Textbox(label="Colorized Archive Path")
                     )
@@ -206,7 +228,6 @@ def run_interface(share=False):
                     )
 
     demo.launch(share=share)
-
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run Gradio Interface")

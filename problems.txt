@@ -6,3 +6,7 @@
 
     pip uninstall -y numpy
     pip install numpy
+
+3. Unresolved reference 'realesrgan'
+
+pip install realesrgan basicsr facexlib gfpgan
