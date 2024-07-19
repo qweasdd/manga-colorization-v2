@@ -6,7 +6,7 @@ I have created a demo video to explain how the webui works.
 
 | Original      | Colorization      |
 |------------|-------------|
-| <img src="figures/bw1.jpg" width="512"> | <img src="figures/color1.png" width="512"> |
+| <img src="figures/bw1.jpg" width="512"> | <img src="figures/color1.jpg" width="512"> |
 | <img src="figures/bw2.jpg" width="512"> | <img src="figures/color2.png" width="512"> |
 | <img src="figures/bw3.jpg" width="512"> | <img src="figures/color3.png" width="512"> |
 | <img src="figures/bw4.jpg" width="512"> | <img src="figures/color4.png" width="512"> |
