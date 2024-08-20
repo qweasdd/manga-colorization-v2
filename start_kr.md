@@ -4,7 +4,9 @@
 - generator 다운 -> [generator](https://drive.google.com/file/d/1qmxUEKADkEM4iYLp1fpPLLKnfZ6tcF-t/view)
 - 다운 받은 generator.zip `networks/`에 넣기
 # start
-``python3 -m venv venv``
-``source venv/bin/activate``
-``pip install -r requirements.txt``
-``python inference.py -p <이미지 폴더 주소>``
+```
+    $ python3 -m venv venv
+    $ source venv/bin/activate
+    $ pip install -r requirements.txt
+    $ python inference.py -p <이미지 폴더 주소>
+```
