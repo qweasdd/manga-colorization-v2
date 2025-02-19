@@ -1,3 +1,6 @@
+## **UPD!!!** **A temporary demo of Manga Colorization v2.5 is now available at [Gradio](https://9d16bd36ce2cec9fa5.gradio.live/). Feel free to check it out!**
+
+
 # Automatic colorization
 
 1. Download [generator](https://drive.google.com/file/d/1qmxUEKADkEM4iYLp1fpPLLKnfZ6tcF-t/view?usp=sharing) and [denoiser](https://drive.google.com/file/d/161oyQcYpdkVdw8gKz_MA8RD-Wtg9XDp3/view?usp=sharing) weights. Put generator and extractor weights in `networks` and denoiser weights in `denoising/models`.
