@@ -1,4 +1,4 @@
-## **UPD!!!** **A temporary demo of Manga Colorization v2.5 is now available at [Gradio](https://9d16bd36ce2cec9fa5.gradio.live/). Feel free to check it out!**
+## **UPD!!!** **A temporary demo of Manga Colorization v2.5 is now available at [Gradio](https://43588f9ffc0394544c.gradio.live/). Feel free to check it out!**
 
 
 # Automatic colorization
