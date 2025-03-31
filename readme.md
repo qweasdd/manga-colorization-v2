@@ -1,4 +1,4 @@
-## **UPD!!!** **A demo of Manga Colorization v2.5 is now available [link](https://manga.vodka/). Feel free to check it out!**
+## **UPD!!!** **A demo of Manga Colorization v2.5 is now available [link](https://mangacol.com). Feel free to check it out!**
 
 
 # Automatic colorization
